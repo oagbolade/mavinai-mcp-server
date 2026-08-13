@@ -1,14 +1,11 @@
 package com.example.chataiserver;
 
-import com.example.chataiserver.tools.AccountTools;
-import com.example.chataiserver.tools.CustomerTools;
-import org.springframework.ai.support.ToolCallbacks;
-import org.springframework.ai.tool.ToolCallback;
+import com.example.chataiserver.tools.*;
+import org.springframework.ai.tool.ToolCallbackProvider;
+import org.springframework.ai.tool.method.MethodToolCallbackProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-
-import java.util.List;
 
 @SpringBootApplication
 public class MarvinaiApplication {
@@ -18,13 +15,29 @@ public class MarvinaiApplication {
 	}
 
     @Bean
-    public List<ToolCallback[]> toolCallbacks(
+    ToolCallbackProvider toolCallbackProvider(
             CustomerTools customerTools,
-            AccountTools accountTools) {
+            AccountTools accountTools,
+            TransactionTools transactionTools,
+            LoanTools loanTools,
+            AccountRestrictionTools accountRestrictionTools,
+            TransferTools transferTools,
+            CardTools cardTools,
+            KycTools kycTools,
+            ReferenceTools referenceTools) {
 
-        return List.of(
-                ToolCallbacks.from(customerTools),
-                ToolCallbacks.from(accountTools)
-        );
+        return MethodToolCallbackProvider.builder()
+                .toolObjects(
+                        customerTools,
+                        accountTools,
+                        transactionTools,
+                        loanTools,
+                        accountRestrictionTools,
+                        transferTools,
+                        cardTools,
+                        kycTools,
+                        referenceTools
+                )
+                .build();
     }
 }
