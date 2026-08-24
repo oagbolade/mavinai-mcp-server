@@ -1,5 +1,6 @@
 package com.example.chataiserver.service.impl;
 
+import com.example.chataiserver.dto.CustomerIdentityDto;
 import com.example.chataiserver.dto.CustomerSummaryDto;
 import com.example.chataiserver.model.Customer;
 import com.example.chataiserver.repository.CustomerRepository;
@@ -8,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -53,6 +56,39 @@ public class CustomerServiceImpl implements CustomerService {
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
 
         return toSummaryDto(customer);
+    }
+
+    @Override
+    public List<CustomerIdentityDto> getCustomerIdsByName(String name) {
+        String normalizedName = normalizeName(name);
+        Map<String, CustomerIdentityDto> results = new LinkedHashMap<>();
+
+        customerRepository.findByFullNameContainingIgnoreCase(normalizedName).forEach(customer ->
+                addIdentity(results, customer));
+        customerRepository.findBySurnameContainingIgnoreCase(normalizedName).forEach(customer ->
+                addIdentity(results, customer));
+        customerRepository.findByFirstNameContainingIgnoreCase(normalizedName).forEach(customer ->
+                addIdentity(results, customer));
+
+        return List.copyOf(results.values());
+    }
+
+    private String normalizeName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Customer name is required");
+        }
+        return name.trim();
+    }
+
+    private CustomerIdentityDto toIdentityDto(Customer customer) {
+        return CustomerIdentityDto.builder()
+                .customerId(customer.getCustomerId())
+                .fullName(customer.getFullName())
+                .build();
+    }
+
+    private void addIdentity(Map<String, CustomerIdentityDto> results, Customer customer) {
+        results.putIfAbsent(customer.getCustomerId(), toIdentityDto(customer));
     }
 
     private CustomerSummaryDto toSummaryDto(Customer customer) {

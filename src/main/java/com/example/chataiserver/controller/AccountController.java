@@ -1,6 +1,8 @@
 package com.example.chataiserver.controller;
 
+import com.example.chataiserver.dto.AccountCustomerNameDto;
 import com.example.chataiserver.dto.AccountOverviewDto;
+import com.example.chataiserver.dto.CustomerIdentityDto;
 import com.example.chataiserver.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,20 @@ public class AccountController {
             @PathVariable String accountNumber) {
 
         return accountService.getAccountOverview(accountNumber);
+    }
+
+    @GetMapping("/{accountNumber}/customer-name")
+    public AccountCustomerNameDto getCustomerNameByAccountNumber(
+            @PathVariable String accountNumber) {
+
+        return accountService.getCustomerNameByAccountNumber(accountNumber);
+    }
+
+    @GetMapping("/{accountNumber}/customer-id")
+    public CustomerIdentityDto getCustomerIdByAccountNumber(
+            @PathVariable String accountNumber) {
+
+        return accountService.getCustomerIdByAccountNumber(accountNumber);
     }
 
 }

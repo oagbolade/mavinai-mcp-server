@@ -1,7 +1,8 @@
 package com.example.chataiserver.tools;
 
+import com.example.chataiserver.dto.AccountCustomerNameDto;
 import com.example.chataiserver.dto.AccountOverviewDto;
-import com.example.chataiserver.model.Account;
+import com.example.chataiserver.dto.CustomerIdentityDto;
 import com.example.chataiserver.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.tool.annotation.Tool;
@@ -23,5 +24,15 @@ public class AccountTools {
     @Tool(description = "Retrieve an account overview")
     public AccountOverviewDto getAccountOverview(String accountNumber) {
         return accountService.getAccountOverview(accountNumber);
+    }
+
+    @Tool(description = "Retrieve a customer's full name from an account number or NUBAN. Use this when the only requested result is the name associated with an account.")
+    public AccountCustomerNameDto getCustomerNameByAccountNumber(String accountNumber) {
+        return accountService.getCustomerNameByAccountNumber(accountNumber);
+    }
+
+    @Tool(description = "Retrieve a customer's ID from an account number or NUBAN. Returns the customer ID and full name for confirmation.")
+    public CustomerIdentityDto getCustomerIdByAccountNumber(String accountNumber) {
+        return accountService.getCustomerIdByAccountNumber(accountNumber);
     }
 }

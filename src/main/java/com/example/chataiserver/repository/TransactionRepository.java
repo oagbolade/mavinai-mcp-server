@@ -53,8 +53,9 @@ public class TransactionRepository {
         return "select top (:limit) * from (" + selectFrom("tbl_transactions", accountPredicate, true, true, true) +
                 " union all " + selectFrom("tbl_Transactionshist", accountPredicate, false, false, false) +
                 " union all " + selectFrom("tbl_dailyTransactions", accountPredicate, true, true, true) +
-                ") tx where (:transactionType = 'ALL' or upper(isnull(tx.transactionType, '')) in (:transactionType, " +
-                "case when :transactionType = 'DEBIT' then 'DR' else 'CR' end)) " +
+                ") tx where (:transactionType = 'ALL' or " +
+                "(:transactionType = 'DEBIT' and upper(isnull(tx.transactionType, '')) in ('DEBIT','DR','D')) or " +
+                "(:transactionType = 'CREDIT' and upper(isnull(tx.transactionType, '')) in ('CREDIT','CR','C'))) " +
                 "order by tx.transactionDate desc, tx.postSequence desc, tx.referenceNumber desc";
     }
 

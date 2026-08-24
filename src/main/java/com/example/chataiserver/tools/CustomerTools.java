@@ -1,6 +1,7 @@
 package com.example.chataiserver.tools;
 
 import com.example.chataiserver.dto.CustomerSummaryDto;
+import com.example.chataiserver.dto.CustomerIdentityDto;
 import com.example.chataiserver.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.tool.annotation.Tool;
@@ -22,5 +23,10 @@ public class CustomerTools {
     @Tool(description = "Retrieve a customer by ID")
     public CustomerSummaryDto getCustomerById(String customerId) {
         return customerService.getCustomerById(customerId);
+    }
+
+    @Tool(description = "Find customer IDs by a customer's full name, first name, or surname. Multiple matches may be returned; each result includes only the customer ID and full name.")
+    public List<CustomerIdentityDto> getCustomerIdsByName(String name) {
+        return customerService.getCustomerIdsByName(name);
     }
 }

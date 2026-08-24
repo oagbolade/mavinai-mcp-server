@@ -1,6 +1,7 @@
 package com.example.chataiserver.controller;
 
 import com.example.chataiserver.dto.CustomerSummaryDto;
+import com.example.chataiserver.dto.CustomerIdentityDto;
 import com.example.chataiserver.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,11 @@ public class CustomerController {
             @PathVariable String customerId) {
 
         return customerService.getCustomerById(customerId);
+    }
+
+    @GetMapping("/ids")
+    public List<CustomerIdentityDto> getCustomerIdsByName(@RequestParam String name) {
+        return customerService.getCustomerIdsByName(name);
     }
 
 }
